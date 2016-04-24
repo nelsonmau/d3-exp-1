@@ -1,0 +1,20 @@
+{
+  "name": "name_bower",
+  "description": "description_bower",
+  "main": "index.js",
+  "authors": [
+    "Andrea Nelson Mauro <nelsonmau@dataninja.it>"
+  ],
+  "license": "mit",
+  "keywords": [
+    "keywords_bower"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
