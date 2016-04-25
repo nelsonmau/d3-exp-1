@@ -44,7 +44,13 @@ $(function() {
       })
       // Creazione del cerchio che avrà il centro sullo spigolo in alto a sinistra del suo contenitore (g) e quindi al centro dell'svg.
       .append("circle")
-      // Raggio del cerchio proporzionale ai dati
+      // Inizialmente ha raggio zero e colore bianco (su sfondo bianco)
+      .attr("r",0)
+      .attr("fill","#fff")
+      // Qui inizia la transizione per tutti gli attributi aggiornati dopo
+      .transition()
+      .duration(1000) // Durata di un secondo (1000 ms)
+      // Nuovo raggio del cerchio proporzionale ai dati
       .attr("r", function(d) {
           // Definiamo il range della scala come metà larghezza dell'svg
           var r = radius.range([0,$(this).parents('svg').width()/2]);
@@ -59,15 +65,35 @@ $(function() {
     /*** Fase di aggiornamento ***/
     // Tutti i metodi che si riferiscono direttamente a items agiscono sugli elementi già esistenti che hanno ancora dati associati
     items.select("circle")
-      // Aggiorniamo il raggio del cerchio, ma non il colore, fissato una volta per tutte all'inizio
+      // Inizio della transizione tra i vecchi valori e quelli nuovi degli attributi aggiornati dopo
+      .transition()
+      .duration(1000)
+      // Aggiorniamo il raggio del cerchio
       .attr("r", function(d) {
           var r = radius.range([0,$(this).parents('svg').width()/2]);
           return r(d.a);
-      });
+      })
+      // Aggiorniamo anche il colore
+      .attr("fill", function(d) {
+          // Applichiamo la scala cromatica ai dati, da un numero tra 0 e 1 ritorna un colore
+          return color(d.b);
+      });      
     
     /*** Fase di distruzione ***/
     // Il metodo exit() permette di definire la distruzione di vecchi elementi non più associati ad alcun dato
-    items.exit().remove();
+    items.exit()
+      .select("circle")
+      // Inizio della transizione
+      .transition()
+      .duration(1000)
+      // Si torna ai valori iniziali, raggio nullo e colore bianco
+      .attr("r",0)
+      .attr("fill","#fff")
+      // E al termine della transizione...
+      .each("end", function() {
+        // Si seleziona il contenitore per eliminarlo del tutto
+        $(this).parents("div.item").remove();
+      });
  
   },1000);
 });
